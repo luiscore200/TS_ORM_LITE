@@ -91,10 +91,10 @@ Una vez generado el archivo <code>Row&lt;T&gt;</code>, el desarrollador lo impor
   <li><strong>Script de sincronización total</strong>:
     <ul>
       <li>Primera fase: consultar la base real y extraer metadatos de todas las tablas y claves foráneas.</li>
-      <li>Segunda fase: generar automáticamente los <code>TableSchema</code> sin<code><T></code>.</li>
-       <li>Tercera fase: Usar el script actual <code>Iorm.provider.ss</code> para generar las interfaces <code>&lt;T&gt;</code>.</li>
+      <li>Segunda fase: generar automáticamente los <code>TableSchema</code> sin <code>&lt;T&gt;</code>.</li>
+       <li>Tercera fase: Usar el script actual <code>Iorm.provider.ts</code> para generar las interfaces <code>&lt;T&gt;</code>.</li>
       <li>Cuarta fase: mapear y exportar todos los <code>Row&lt;T&gt;</code> actualizados de forma automatica.</li>
-      <li>Quinta fase: sobreescribir los esquemas con los tipados actualizados, generando una sincronizacion y auto generacion de esquemas e interfaces de forma automatica, lo cual permitira al usuario mantener un control total de su db y tipado de forma automatica </li>
+      <li>Quinta fase: sobreescribir los esquemas con los tipados actualizados <code>tableSchema&lt;T&gt;</code>, generando una <strong> sincronizacion y auto generacion de esquemas e interfaces de forma automatica, lo cual permitira al usuario mantener un control total de su db y tipado de forma automatica </Strong> sin migraciones erroneas, (alters y delete se harian de forma manual, respetando la capa de seguridad y consistencia de una db con tablas y datos sencibles)</li>
     </ul>
   </li>
 </ol>
