@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>TS_ORM_LITE - Documentación Oficial</title>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; margin: 2rem; max-width: 900px; }
-    code, pre { background: #f5f5f5; padding: 0.2rem 0.4rem; border-radius: 4px; }
-    pre { padding: 1rem; overflow-x: auto; }
-    h1, h2, h3 { border-bottom: 1px solid #ddd; padding-bottom: 0.2rem; }
-  </style>
-</head>
+
 <body>
 
 <h1>TS_ORM_LITE</h1>
