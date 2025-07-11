@@ -20,37 +20,44 @@ Su diseño busca que toda la estructura de la base de datos, las consultas SQL y
 
 <p>La meta es minimizar la duplicidad de definiciones y garantizar que cada operación CRUD esté validada y documentada por el propio compilador TypeScript.</p>
 
-<h2>¿Qué es el <code>Row&lt;T&gt;</code> y cómo se genera?</h2>
+<h2>¿Qué es el <code>Row&lt;T&gt;</code> y cómo se integra?</h2>
 
-<p>El <code>Row&lt;T&gt;</code> es una interfaz TypeScript que representa exactamente cómo luce una fila individual de una tabla SQL.
-<strong>No se redacta manualmente</strong> para cada tabla: se genera de forma <strong>semi-automática</strong> mediante un <code>script</code> que lee la definición del <code>TableSchema</code> y construye los tipos reales de cada campo.</p>
+<p>El <code>Row&lt;T&gt;</code> es una interfaz TypeScript que representa la estructura exacta de una fila individual de la tabla en la base de datos.</p>
 
-<p>El flujo típico es:</p>
-<ol>
-  <li>Definir el <code>TableSchema</code> de la tabla con todos sus campos, claves y relaciones.</li>
-  <li>Ejecutar el script de generación de tipos (por ejemplo, <code>Iorm.provider.ts</code>).</li>
-  <li>El script analiza los esquemas y crea o actualiza automáticamente los archivos <code>Row&lt;T&gt;</code>.</li>
-  <li>El desarrollador importa ese <code>Row&lt;T&gt;</code> y lo asigna explícitamente cuando tipa operaciones del ORM.</li>
-</ol>
+<p>Se genera de forma <strong>semi-automática</strong> mediante un script (por ejemplo, <code>Iorm.provider.ts</code>) que analiza todos los <code>TableSchema</code> definidos y produce las interfaces reales con tipos estrictos.</p>
 
-<p>Ejemplo real:</p>
-<pre><code>// Definición de esquema
-export const Users = {
+<p>El desarrollador luego importa ese <code>Row&lt;T&gt;</code> y lo inyecta directamente en el <code>TableSchema&lt;T&gt;</code>.  
+Esto hace que el esquema quede <strong>autocontenido</strong>: cada tabla sabe exactamente cómo luce cada fila.  
+Por ejemplo:</p>
+
+<pre><code>// Definición de esquema autocontenido
+export const Users: TableSchema&lt;UsersRow&gt; = {
   name: 'users',
   columns: {
     id: { name: 'id', sqlType: { type: 'INT' }, primaryKey: true, autoIncrement: true },
     email: { name: 'email', sqlType: { type: 'VARCHAR', length: 255 }, unique: true }
   }
-} satisfies TableSchema;
+};
 
 // Tipado generado (semi-automático)
 export interface UsersRow {
   id: number;
   email: string;
-}
+}</code></pre>
 
-// Uso en el ORM
-const { ormResult } = await orm.find&lt;UsersRow&gt;(Users);</code></pre>
+<p>De esta forma, <strong>no es necesario pasar el tipo manualmente</strong> a cada operación del ORM.  
+El <code>MiniOrm</code> usa internamente ese <code>&lt;T&gt;</code> para validar y autocompletar <strong>todas</strong> sus operaciones:
+<code>insert</code>, <code>find</code>, <code>update</code>, <code>delete</code>, etc.</p>
+
+<p>Esto garantiza que:</p>
+<ul>
+  <li>Los datos insertados respeten la estructura real de la tabla.</li>
+  <li>Los resultados devueltos estén fuertemente tipados.</li>
+  <li>El compilador avise de inmediato si se intenta insertar o actualizar un campo inexistente.</li>
+</ul>
+
+<p>Así, el esquema se convierte en la única fuente de verdad para la definición de la tabla <strong>y</strong> para su contrato de datos en todo el backend.</p>
+
 
 <p>De este modo, el ORM devuelve y valida los datos exactamente como dicta la tabla real, ofreciendo autocompletado y validación automática en todo momento.</p>
 
